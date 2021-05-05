@@ -4,6 +4,6 @@ export const Wrapper = styled.header`
   display:flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  margin: 1.5rem;
+  justify-content: flex-start;
+  margin: 1.5rem;  
 `
