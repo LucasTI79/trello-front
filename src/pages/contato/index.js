@@ -1,64 +1,162 @@
 import React from 'react'
-import { Input, Wrapper, Form, FormGroup } from './styles'
+import { 
+  Input,
+  Wrapper,
+  Form, 
+  FormGroup, 
+  CheckboxGroup, 
+  CheckboxItem, 
+  FormContainer, 
+  Tag, 
+  TagContainer 
+} from './styles'
 
 export default function Contato(){
-  const nameRef= React.useRef()
+  const TXT_INITIAL_VALUE = ''
+  const NUMBER_INITIAL_VALUE = 0
+  const ARRAY_INITIAL_VALUE = [] 
+  const nameRef= React.useRef('')
+  const emailRef = React.useRef('')
+  const messageRef = React.useRef('')
+  const [dropdown, setDropdown] = React.useState(0)
+  const [tagsSelected, setTagsSelected] = React.useState([])
+  const [checkboxSelected, setCheckboxSelected] = React.useState([])
 
   function handleSubmit(e){
-    e.preventDefault()
-    console.log(nameRef.current.value)
+    const data = {
+      name: nameRef.current.value,
+      email: emailRef.current.value,
+      message: messageRef.current.value,
+      dropdown,
+      tagsSelected,
+      checkboxSelected
+    }
+    console.log({data})
+    nameRef.current.value = TXT_INITIAL_VALUE
+    emailRef.current.value = TXT_INITIAL_VALUE
+    messageRef.current.value = TXT_INITIAL_VALUE
+    setDropdown(0)
+    setTagsSelected(ARRAY_INITIAL_VALUE)
+    setCheckboxSelected(ARRAY_INITIAL_VALUE)
   }
+
+  function handleTagClick(id){
+    const alreadySelected = tagsSelected.findIndex(tag => tag === id)
+    if(alreadySelected >= 0){
+      const filteredItems = tagsSelected.filter(tag => tag !== id)
+      setTagsSelected(filteredItems)
+    }else{
+      setTagsSelected([...tagsSelected, id])
+    }
+  }
+
+  function handleCheckboxClick(id){
+    const alreadySelected = checkboxSelected.findIndex(tag => tag === id)
+    if(alreadySelected >= 0){
+      const filteredItems = checkboxSelected.filter(tag => tag !== id)
+      setCheckboxSelected(filteredItems)
+    }else{
+      setCheckboxSelected([...checkboxSelected, id])
+    }
+  }
+
+  const tags = [ 
+    { id:0, name: 'web'},
+    { id:1, name: 'illustration'},
+    { id:2, name: 'graphics'},
+    { id:3, name: 'ui'},
+    { id:4, name: 'design'},
+    { id:5, name: 'app'},
+    { id:6, name: 'iphone'},
+    { id:7, name: 'interface'},
+    { id:8, name: 'icon'},
+    { id:9, name: 'web design'},
+  ]
+
+  const checkboxs = [
+    { id:0, option: 'Opção 1' },
+    { id:1, option: 'Opção 2' },
+    { id:2, option: 'Opção 3' },
+  ]
+
   return(
     <Wrapper>
       <h1>Formulário</h1>
       <Form>
 
-        <div>
+        <FormContainer>
           <FormGroup>
             <label htmlFor={"txtName"}>Nome</label>
-            <Input placeholder={"John Doe"} id="txtName" ref={nameRef} type="text"/>
+            <Input 
+              placeholder={"John Doe"} 
+              id="txtName" 
+              ref={nameRef} 
+              type="text"
+              autoComplete={'false'}
+              />
           </FormGroup>
           <FormGroup>
-          <label htmlFor={"txtEmail"}>Email</label>
-          <Input placeholder={"email@domain.com"} id="txtEmail" type="email"/>
+            <label htmlFor={"txtEmail"}>Email</label>
+            <Input 
+              placeholder={"email@domain.com"} 
+              id="txtEmail" 
+              ref={emailRef}
+              type="email"
+              />
           </FormGroup>
-          <textarea placeholder={"Something"} style={{resize:'block'}}/>
-        </div>
+          <FormGroup>
+            <label htmlFor={"txtMessage"}>Mensagem</label>
+            <textarea 
+              id="txtMessage" 
+              rows="9" 
+              placeholder={"Type something"} 
+              style={{resize:'vertical'}}
+              ref={messageRef}
+              />
+          </FormGroup>
+          
+        </FormContainer>
 
         <div>
-          <input type="checkbox"/>
-          <label>Opção 1</label>
-          <input type="checkbox"/>
-          <label>Opção 2</label>
-          <input type="checkbox"/>
-          <label>Opção 3</label>
-          <br/>
-          <br/>
+          <FormGroup>
+            <span>{'\u00a0'}</span>
+            <CheckboxGroup>
+              {checkboxs.map(checkbox => (
+                <CheckboxItem
+                  key={checkbox.id}
+                  onClick={() => handleCheckboxClick(checkbox.id)}
+                  >
+                  <input id={`${checkbox.option}${checkbox.id}`} type="checkbox"/>
+                  <label htmlFor={`${checkbox.option}${checkbox.id}`}>{checkbox.option}</label>
+                </CheckboxItem>
+              ))}
+            </CheckboxGroup>
+          </FormGroup>
           <FormGroup>
           <label>Dropdown</label>
-          <select>
-            <option>selecione</option>
-            <option>Select 1</option>
-            <option>Select 2</option>
-            <option>Select 3</option>
+          <select onChange={(e) => setDropdown(e.target.value)}>
+            <option value="0">selecione</option>
+            <option value="1">Select 1</option>
+            <option value="2">Select 2</option>
+            <option value="3">Select 3</option>
           </select>
           </FormGroup>
-          <div>
-            <span>
-              web
-            </span>
-          </div>
-          <div>
-            <span>
-              Illustration
-            </span>
-          </div>
-          <div>
-            <span>
-              graphics
-            </span>
-          </div>
-          <button type="submit" onClick={handleSubmit}>Enviar</button>
+          <FormGroup>
+            <span style={{marginBottom:5}}>Tags</span>
+            <TagContainer>
+              {tags.map(tag => (
+                <Tag
+                  key={tag.id} 
+                  style={tagsSelected.includes(tag.id) ? { backgroundColor: '#000', color: '#EFFFFA'} : { backgroundColor: '#EFFFFA' }}
+                  onClick={() => handleTagClick(tag.id)}
+                  >
+                  <span>{tag.name}</span>
+                </Tag>
+              ))}
+            </TagContainer>
+          </FormGroup>
+         
+          <button type="reset" onClick={handleSubmit}>Enviar</button>
         </div>
 
       </Form>

@@ -5,5 +5,5 @@ export const Wrapper = styled.header`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  margin: 1.5rem;  
+  top:0;
 `
