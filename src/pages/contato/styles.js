@@ -4,6 +4,7 @@ export const Input = styled.input`
   border: 0 0 1 0 transparent solid ;
   border-radius: 5%;
   height: 35px;
+  width: 300px
 `
 
 export const Wrapper = styled.div`

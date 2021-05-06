@@ -31,11 +31,15 @@ export default function Contato(){
       tagsSelected,
       checkboxSelected
     }
-    console.log({data})
+    const inputs = document.getElementsByTagName('input')
+    // console.log(typeof inputs)
+    Array.from(inputs).forEach(input => console.log(input.value))
+    //console.log('inputs',inputs[0].value)
+    // console.log({data})
     nameRef.current.value = TXT_INITIAL_VALUE
     emailRef.current.value = TXT_INITIAL_VALUE
     messageRef.current.value = TXT_INITIAL_VALUE
-    setDropdown(0)
+    setDropdown(NUMBER_INITIAL_VALUE)
     setTagsSelected(ARRAY_INITIAL_VALUE)
     setCheckboxSelected(ARRAY_INITIAL_VALUE)
   }
@@ -126,7 +130,7 @@ export default function Contato(){
                   key={checkbox.id}
                   onClick={() => handleCheckboxClick(checkbox.id)}
                   >
-                  <input id={`${checkbox.option}${checkbox.id}`} type="checkbox"/>
+                  <input checked={checkboxSelected.includes(checkbox.id) ? true : false} id={`${checkbox.option}${checkbox.id}`} type="checkbox"/>
                   <label htmlFor={`${checkbox.option}${checkbox.id}`}>{checkbox.option}</label>
                 </CheckboxItem>
               ))}
@@ -134,7 +138,7 @@ export default function Contato(){
           </FormGroup>
           <FormGroup>
           <label>Dropdown</label>
-          <select onChange={(e) => setDropdown(e.target.value)}>
+          <select value={dropdown} onChange={(e) => setDropdown(e.target.value)}>
             <option value="0">selecione</option>
             <option value="1">Select 1</option>
             <option value="2">Select 2</option>
