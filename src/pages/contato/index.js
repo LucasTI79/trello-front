@@ -1,4 +1,5 @@
 import React from 'react'
+import api from '../../services/api'
 import { 
   Input,
   Wrapper,
@@ -22,7 +23,7 @@ export default function Contato(){
   const [tagsSelected, setTagsSelected] = React.useState([])
   const [checkboxSelected, setCheckboxSelected] = React.useState([])
 
-  function handleSubmit(e){
+  const handleSubmit = async (e) => {
     const data = {
       name: nameRef.current.value,
       email: emailRef.current.value,
@@ -31,11 +32,24 @@ export default function Contato(){
       tagsSelected,
       checkboxSelected
     }
-    const inputs = document.getElementsByTagName('input')
-    // console.log(typeof inputs)
-    Array.from(inputs).forEach(input => console.log(input.value))
-    //console.log('inputs',inputs[0].value)
-    // console.log({data})
+
+    api.post('cards', {
+        name: data.name,
+        desc:`${data.email}\n${data.message}`
+    }).then(cardResponse => {
+      console.log(cardResponse.data, cardResponse.status)
+      const tagsInterval = setInterval(() => {
+        tagsSelected.forEach(async tag => {
+          const tagResponse = await api.post(`labels/add/${cardResponse.data.id}`, null, {
+            value: tag,
+          })
+          console.log('tag',tag)
+        })
+      }, 1000)
+      clearInterval(tagsInterval)
+     
+    })
+    
     nameRef.current.value = TXT_INITIAL_VALUE
     emailRef.current.value = TXT_INITIAL_VALUE
     messageRef.current.value = TXT_INITIAL_VALUE
@@ -65,16 +79,46 @@ export default function Contato(){
   }
 
   const tags = [ 
-    { id:0, name: 'web'},
-    { id:1, name: 'illustration'},
-    { id:2, name: 'graphics'},
-    { id:3, name: 'ui'},
-    { id:4, name: 'design'},
-    { id:5, name: 'app'},
-    { id:6, name: 'iphone'},
-    { id:7, name: 'interface'},
-    { id:8, name: 'icon'},
-    { id:9, name: 'web design'},
+    {
+      "id": "609092d5d41eeff1fa76ec98",
+      "name": "Web",
+    },
+    {
+      "id": "609092d5d41eeff1fa76ec99",
+      "name": "Illustration",  
+    },
+    {
+      "id": "609092d5d41eeff1fa76ec9c",
+      "name": "Graphics",   
+    },
+    {
+      "id": "609092d5d41eeff1fa76ec9e",
+      "name": "UI",
+    },
+    {
+      "id": "609092d5d41eeff1fa76eca0",
+      "name": "Design",
+    },
+    {
+      "id": "609092d5d41eeff1fa76eca1",
+      "name": "App",
+    },
+    {
+      "id": "609487725f777d1abaa42388",
+      "name": "Iphone",
+    },
+    {
+      "id": "6094877b9827598c0406d458",
+      "name": "Interface",
+    },
+    {
+      "id": "60948786ad8d373da8d95e6a",
+      "name": "Icon",
+    },
+    {
+      "id": "609487931d5c481ce48b770a",
+      "name": "Web Design",
+    }
   ]
 
   const checkboxs = [

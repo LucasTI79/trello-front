@@ -1,10 +1,13 @@
 import styled from 'styled-components'
 
 export const Input = styled.input`
-  border: 0 0 1 0 transparent solid ;
-  border-radius: 5%;
+  width:300px;
   height: 35px;
-  width: 300px
+  border-radius:10px;
+  margin-top:2%;
+  @media(max-width: 800px) {
+    width:100%;
+  }
 `
 
 export const Wrapper = styled.div`
@@ -34,13 +37,17 @@ export const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   margin: 3% 0 8% 0;
-  align-content:space-around;
 `
 
 export const CheckboxGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
   max-width: 400px;
+  margin-top:5%;
+  @media(max-width: 800px) {
+    flex-direction: row;
+    justify-content:space-around;
+  }
 `
 
 export const CheckboxItem = styled.div`
