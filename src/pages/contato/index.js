@@ -28,6 +28,7 @@ export default function Contato(){
   React.useLayoutEffect(() => {
     (async () => {
       const response = await api.get('labels')
+      console.log(process.env.BASE_URL)
       setTags(response.data)
     })()
   },[])
