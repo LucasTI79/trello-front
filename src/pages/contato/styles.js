@@ -3,11 +3,16 @@ import styled from 'styled-components'
 export const Input = styled.input`
   width:300px;
   height: 35px;
+  background-color:#f1f1f1;
   border-radius:10px;
   margin-top:2%;
   @media(max-width: 800px) {
     width:100%;
   }
+`
+
+export const Label = styled.label`
+  font-weight:bold;
 `
 
 export const Wrapper = styled.div`
@@ -68,7 +73,14 @@ export const Tag = styled.div`
   cursor: pointer;
   padding: 5px;
   border-radius: 5px;
-  margin: 0 5px 5px 0;
-  
+  margin: 0 5px 5px 0; 
+`
+
+export const Button = styled.button`
+  color:#d2d2d2;
+  border-radius:5px;
+  padding:5px;
+  font-weight:bold;
+  background-color:#6B61ED;
 `
 

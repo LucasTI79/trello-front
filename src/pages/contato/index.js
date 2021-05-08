@@ -3,6 +3,7 @@ import api from '../../services/api'
 import { emailValidate } from '../../Utils/validation'
 import { 
   Input,
+  Label,
   Wrapper,
   Form, 
   FormGroup, 
@@ -10,7 +11,8 @@ import {
   CheckboxItem, 
   FormContainer, 
   Tag, 
-  TagContainer 
+  TagContainer,
+  Button
 } from './styles'
 
 export default function Contato(){
@@ -138,7 +140,7 @@ export default function Contato(){
 
           <FormContainer>
             <FormGroup>
-              <label htmlFor={"txtName"}>Nome</label>
+              <Label htmlFor={"txtName"}>Nome</Label>
               <Input 
                 placeholder={"John Doe"} 
                 id="txtName" 
@@ -148,7 +150,7 @@ export default function Contato(){
                 />
             </FormGroup>
             <FormGroup>
-              <label htmlFor={"txtEmail"}>Email</label>
+              <Label htmlFor={"txtEmail"}>Email</Label>
               <Input 
                 placeholder={"email@domain.com"} 
                 id="txtEmail" 
@@ -157,12 +159,12 @@ export default function Contato(){
                 />
             </FormGroup>
             <FormGroup>
-              <label htmlFor={"txtMessage"}>Mensagem</label>
+              <Label htmlFor={"txtMessage"}>Mensagem</Label>
               <textarea 
                 id="txtMessage" 
                 rows="9" 
                 placeholder={"Type something"} 
-                style={{resize:'vertical'}}
+                style={{resize:'vertical', backgroundColor:'#f1f1f1'}}
                 ref={messageRef}
                 />
             </FormGroup>
@@ -180,15 +182,15 @@ export default function Contato(){
                     >
                     <input
                       checked={checkitemsSelected.includes(checkbox.id) ? true : false}
-                      id={`${checkbox.option}${checkbox.id}`} 
+                      id={`${checkbox.option}`} 
                       type="checkbox"/>
-                    <label htmlFor={`${checkbox.option}${checkbox.id}`}>{checkbox.option}</label>
+                    <Label htmlFor={`${checkbox.option}`}>{checkbox.option}</Label>
                   </CheckboxItem>
                 ))}
               </CheckboxGroup>
             </FormGroup>
             <FormGroup>
-            <label>Dropdown</label>
+            <Label>Dropdown</Label>
             <select value={dropdown} onChange={(e) => setDropdown(e.target.value)}>
               <option value="0">Sem experiência</option>
               <option value="1">1-2 anos de experiência</option>
@@ -204,8 +206,8 @@ export default function Contato(){
                     key={tag.id} 
                     style={
                       tagsSelected.includes(tag.id) 
-                      ?{ backgroundColor: '#000', color: '#EFFFFA', fontWeight:'bold', textTransform:'uppercase'} 
-                      : { backgroundColor: '#EFFFFA', fontWeight:'bold', textTransform:'uppercase'}}
+                      ?{ backgroundColor: '#6B61ED', color: '#EFFFFA', fontWeight:'bold', textTransform:'uppercase'} 
+                      : { backgroundColor: '#d2d2d2', fontWeight:'bold', textTransform:'uppercase'}}
                     onClick={() => handleTagClick(tag.id)}
                     >
                     <span>{tag.name}</span>
@@ -214,7 +216,7 @@ export default function Contato(){
               </TagContainer>
             </FormGroup>
           
-            <button type="reset" onClick={handleSubmit}>Enviar</button>
+            <Button type="reset" onClick={handleSubmit}>Enviar</Button>
           </div>
 
         </Form>
