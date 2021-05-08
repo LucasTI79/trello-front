@@ -1,8 +1,7 @@
 import  axios from 'axios';
-require('dotenv').config()
 
 const api = axios.create({
-  baseURL: process.env.BASE_URL
+  baseURL: 'https://trello-api-slideworks.herokuapp.com/'
 });
 
 export default api;
