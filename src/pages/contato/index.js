@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import api from '../../services/api'
 import { emailValidate } from '../../Utils/validation'
 import { 
@@ -22,10 +22,10 @@ export default function Contato(){
   const messageRef = React.useRef('')
   const [dropdown, setDropdown] = React.useState(0)
   const [tagsSelected, setTagsSelected] = React.useState([])
-  const [checkboxSelected, setCheckboxSelected] = React.useState([])
+  const [checkitemsSelected, setCheckitemsSelected] = React.useState([])
   const [tags, setTags] = React.useState([])
 
-  useEffect(() => {
+  React.useLayoutEffect(() => {
     (async () => {
       const response = await api.get('labels')
       setTags(response.data)
@@ -41,7 +41,7 @@ export default function Contato(){
       message: messageRef.current.value,
       dropdown,
       tagsSelected,
-      checkboxSelected
+      checkitemsSelected
     }
     if(!data.name){
       alert('Por favor preencha o campo nome')
@@ -59,11 +59,11 @@ export default function Contato(){
       messageRef.current.focus()
       return
     }
-    api.post('cards', {
+     api.post('cards', {
         name: data.name,
-        desc:`${data.email}\n${data.message}`
-    })
-    .then(cardResponse => {
+        desc:`${data.email}\n${data.message}`,
+    }, { params : { idList: data.dropdown } })
+    .then(async cardResponse => {
       // console.log(cardResponse.data.idCard, cardResponse.status)
       const { idCard } = cardResponse.data;
 
@@ -73,37 +73,49 @@ export default function Contato(){
           idCard
         })
         .catch(err => alert('Erro ao adicionar as tags'))
-
-      checkboxSelected.forEach(async value => console.log('value',value))
-
       })
+
+      await api.post('checklists', {idCard})
+        .then(checklist => {
+        checkitemsSelected.forEach(async checkitem => {
+          await api.post('checkitems', null, {
+            params: {
+              idChecklist: checklist.id,
+              name: checkitem
+            }
+          })
+        })
+      })
+   
     }).catch(err => alert('Erro ao enviar formulário'))
+
+    alert('Dados enviados com sucesso!')
     
     nameRef.current.value = TXT_INITIAL_VALUE
     emailRef.current.value = TXT_INITIAL_VALUE
     messageRef.current.value = TXT_INITIAL_VALUE
     setDropdown(NUMBER_INITIAL_VALUE)
     setTagsSelected(ARRAY_INITIAL_VALUE)
-    setCheckboxSelected(ARRAY_INITIAL_VALUE)
+    setCheckitemsSelected(ARRAY_INITIAL_VALUE)
   }
 
   function handleTagClick(id){
-    const alreadySelected = tagsSelected.findIndex(tag => tag === id)
-    if(alreadySelected >= 0){
-      const filteredItems = tagsSelected.filter(tag => tag !== id)
-      setTagsSelected(filteredItems)
-    }else{
-      setTagsSelected([...tagsSelected, id])
-    }
+  const alreadySelected = tagsSelected.findIndex(tag => tag === id)
+  if(alreadySelected >= 0){
+    const filteredItems = tagsSelected.filter(tag => tag !== id)
+    setTagsSelected(filteredItems)
+  }else{
+    setTagsSelected([...tagsSelected, id])
+  }
   }
 
   function handleCheckboxClick(id){
-    const alreadySelected = checkboxSelected.findIndex(tag => tag === id)
+    const alreadySelected = checkitemsSelected.findIndex(tag => tag === id)
     if(alreadySelected >= 0){
-      const filteredItems = checkboxSelected.filter(tag => tag !== id)
-      setCheckboxSelected(filteredItems)
+      const filteredItems = checkitemsSelected.filter(tag => tag !== id)
+      setCheckitemsSelected(filteredItems)
     }else{
-      setCheckboxSelected([...checkboxSelected, id])
+      setCheckitemsSelected([...checkitemsSelected, id])
     }
   }
 
@@ -161,7 +173,7 @@ export default function Contato(){
                   onClick={() => handleCheckboxClick(checkbox.id)}
                   >
                   <input
-                    checked={checkboxSelected.includes(checkbox.id) ? true : false}
+                    checked={checkitemsSelected.includes(checkbox.id) ? true : false}
                     id={`${checkbox.option}${checkbox.id}`} 
                     type="checkbox"/>
                   <label htmlFor={`${checkbox.option}${checkbox.id}`}>{checkbox.option}</label>
@@ -172,19 +184,22 @@ export default function Contato(){
           <FormGroup>
           <label>Dropdown</label>
           <select value={dropdown} onChange={(e) => setDropdown(e.target.value)}>
-            <option value="0">selecione</option>
-            <option value="1">Select 1</option>
-            <option value="2">Select 2</option>
-            <option value="3">Select 3</option>
+            <option value="0">Sem experiência</option>
+            <option value="1">1-2 anos de experiência</option>
+            <option value="2">3-5 anos de experiência</option>
+            <option value="3">+ 5 anos de experiência</option>
           </select>
           </FormGroup>
           <FormGroup>
-            <span style={{marginBottom:5}}>Tags</span>
+            <h2 style={{marginTop:-1}}>Tags</h2>
             <TagContainer>
               {tags.map(tag => (
                 <Tag
                   key={tag.id} 
-                  style={tagsSelected.includes(tag.id) ? { backgroundColor: '#000', color: '#EFFFFA'} : { backgroundColor: '#EFFFFA' }}
+                  style={
+                    tagsSelected.includes(tag.id) 
+                    ?{ backgroundColor: '#000', color: '#EFFFFA', fontWeight:'bold', textTransform:'uppercase'} 
+                    : { backgroundColor: '#EFFFFA', fontWeight:'bold', textTransform:'uppercase'}}
                   onClick={() => handleTagClick(tag.id)}
                   >
                   <span>{tag.name}</span>
