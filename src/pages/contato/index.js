@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import api from '../../services/api'
+import { emailValidate } from '../../Utils/validation'
 import { 
   Input,
   Wrapper,
@@ -22,8 +23,18 @@ export default function Contato(){
   const [dropdown, setDropdown] = React.useState(0)
   const [tagsSelected, setTagsSelected] = React.useState([])
   const [checkboxSelected, setCheckboxSelected] = React.useState([])
+  const [tags, setTags] = React.useState([])
+
+  useEffect(() => {
+    (async () => {
+      const response = await api.get('labels')
+      setTags(response.data)
+    })()
+  },[])
+
 
   const handleSubmit = async (e) => {
+    e.preventDefault()
     const data = {
       name: nameRef.current.value,
       email: emailRef.current.value,
@@ -32,23 +43,41 @@ export default function Contato(){
       tagsSelected,
       checkboxSelected
     }
+    if(!data.name){
+      alert('Por favor preencha o campo nome')
+      nameRef.current.focus()
+      return
+    }
 
+    if(!emailValidate.exec(data.email)){
+      alert('Por favor preencha o campo de email corretamente')
+      emailRef.current.focus()
+      return
+    }
+    if(!data.message){
+      alert('Por favor preencha o campo mensagem')
+      messageRef.current.focus()
+      return
+    }
     api.post('cards', {
         name: data.name,
         desc:`${data.email}\n${data.message}`
-    }).then(cardResponse => {
-      console.log(cardResponse.data, cardResponse.status)
-      const tagsInterval = setInterval(() => {
-        tagsSelected.forEach(async tag => {
-          const tagResponse = await api.post(`labels/add/${cardResponse.data.id}`, null, {
-            value: tag,
-          })
-          console.log('tag',tag)
-        })
-      }, 1000)
-      clearInterval(tagsInterval)
-     
     })
+    .then(cardResponse => {
+      // console.log(cardResponse.data.idCard, cardResponse.status)
+      const { idCard } = cardResponse.data;
+
+      tagsSelected.forEach(async value => {
+        await api.post('labels/add', {
+          value,
+          idCard
+        })
+        .catch(err => alert('Erro ao adicionar as tags'))
+
+      checkboxSelected.forEach(async value => console.log('value',value))
+
+      })
+    }).catch(err => alert('Erro ao enviar formulário'))
     
     nameRef.current.value = TXT_INITIAL_VALUE
     emailRef.current.value = TXT_INITIAL_VALUE
@@ -77,49 +106,6 @@ export default function Contato(){
       setCheckboxSelected([...checkboxSelected, id])
     }
   }
-
-  const tags = [ 
-    {
-      "id": "609092d5d41eeff1fa76ec98",
-      "name": "Web",
-    },
-    {
-      "id": "609092d5d41eeff1fa76ec99",
-      "name": "Illustration",  
-    },
-    {
-      "id": "609092d5d41eeff1fa76ec9c",
-      "name": "Graphics",   
-    },
-    {
-      "id": "609092d5d41eeff1fa76ec9e",
-      "name": "UI",
-    },
-    {
-      "id": "609092d5d41eeff1fa76eca0",
-      "name": "Design",
-    },
-    {
-      "id": "609092d5d41eeff1fa76eca1",
-      "name": "App",
-    },
-    {
-      "id": "609487725f777d1abaa42388",
-      "name": "Iphone",
-    },
-    {
-      "id": "6094877b9827598c0406d458",
-      "name": "Interface",
-    },
-    {
-      "id": "60948786ad8d373da8d95e6a",
-      "name": "Icon",
-    },
-    {
-      "id": "609487931d5c481ce48b770a",
-      "name": "Web Design",
-    }
-  ]
 
   const checkboxs = [
     { id:0, option: 'Opção 1' },
@@ -174,7 +160,10 @@ export default function Contato(){
                   key={checkbox.id}
                   onClick={() => handleCheckboxClick(checkbox.id)}
                   >
-                  <input checked={checkboxSelected.includes(checkbox.id) ? true : false} id={`${checkbox.option}${checkbox.id}`} type="checkbox"/>
+                  <input
+                    checked={checkboxSelected.includes(checkbox.id) ? true : false}
+                    id={`${checkbox.option}${checkbox.id}`} 
+                    type="checkbox"/>
                   <label htmlFor={`${checkbox.option}${checkbox.id}`}>{checkbox.option}</label>
                 </CheckboxItem>
               ))}
