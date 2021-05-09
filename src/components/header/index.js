@@ -1,5 +1,5 @@
 import React from 'react'
-import { Wrapper } from './styles'
+import { Wrapper, Link } from './styles'
 
 export default function Header (){
   return(
@@ -13,6 +13,11 @@ export default function Header (){
           <path fill="#fff" d="M64.842,43.225c0-11.937-9.677-21.613-21.616-21.613c-11.938,0-21.613,9.676-21.613,21.613
           c0,11.94,9.676,21.62,21.613,21.62C55.166,64.845,64.842,55.166,64.842,43.225"></path>
       </svg>
+      <Link 
+      target="_blank"
+      href="https://trello.com/b/XlIw6Jlq/slideworkscc">
+        Trello Board
+      </Link>
     </Wrapper>
   )
 }

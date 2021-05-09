@@ -1,4 +1,5 @@
 import React from 'react'
+import Header from '../../components/header'
 import api from '../../services/api'
 import { emailValidate } from '../../Utils/validation'
 import { 
@@ -134,93 +135,96 @@ export default function Contato(){
     )
   }else{
     return(
-      <Wrapper>
-        <h1>Formulário</h1>
-        <Form>
+      <>
+        <Header/>
+        <Wrapper>
+          <h1>Formulário</h1>
+          <Form>
 
-          <FormContainer>
-            <FormGroup>
-              <Label htmlFor={"txtName"}>Nome</Label>
-              <Input 
-                placeholder={"John Doe"} 
-                id="txtName" 
-                ref={nameRef} 
-                type="text"
-                autoComplete={'false'}
-                />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor={"txtEmail"}>Email</Label>
-              <Input 
-                placeholder={"email@domain.com"} 
-                id="txtEmail" 
-                ref={emailRef}
-                type="email"
-                />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor={"txtMessage"}>Mensagem</Label>
-              <textarea 
-                id="txtMessage" 
-                rows="9" 
-                placeholder={"Type something"} 
-                style={{resize:'vertical', backgroundColor:'#f1f1f1'}}
-                ref={messageRef}
-                />
-            </FormGroup>
+            <FormContainer>
+              <FormGroup>
+                <Label htmlFor={"txtName"}>Nome</Label>
+                <Input 
+                  placeholder={"John Doe"} 
+                  id="txtName" 
+                  ref={nameRef} 
+                  type="text"
+                  autoComplete={'false'}
+                  />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor={"txtEmail"}>Email</Label>
+                <Input 
+                  placeholder={"email@domain.com"} 
+                  id="txtEmail" 
+                  ref={emailRef}
+                  type="email"
+                  />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor={"txtMessage"}>Mensagem</Label>
+                <textarea 
+                  id="txtMessage" 
+                  rows="9" 
+                  placeholder={"Type something"} 
+                  style={{resize:'vertical', backgroundColor:'#f1f1f1'}}
+                  ref={messageRef}
+                  />
+              </FormGroup>
+              
+            </FormContainer>
+
+            <div>
+              <FormGroup>
+                <span>{'\u00a0'}</span>
+                <CheckboxGroup>
+                  {checkboxs.map(checkbox => (
+                    <CheckboxItem
+                      key={checkbox.id}
+                      onClick={() => handleCheckboxClick(checkbox.id)}
+                      >
+                      <input
+                        checked={checkitemsSelected.includes(checkbox.id) ? true : false}
+                        id={`${checkbox.option}`} 
+                        type="checkbox"/>
+                      <Label htmlFor={`${checkbox.option}`}>{checkbox.option}</Label>
+                    </CheckboxItem>
+                  ))}
+                </CheckboxGroup>
+              </FormGroup>
+              <FormGroup>
+              <Label>Dropdown</Label>
+              <select value={dropdown} onChange={(e) => setDropdown(e.target.value)}>
+                <option value="0">Sem experiência</option>
+                <option value="1">1-2 anos de experiência</option>
+                <option value="2">3-5 anos de experiência</option>
+                <option value="3">+ 5 anos de experiência</option>
+              </select>
+              </FormGroup>
+              <FormGroup>
+                <h2 style={{marginTop:-1}}>Tags</h2>
+                <TagContainer>
+                  {tags.map(tag => (
+                    <Tag
+                      key={tag.id} 
+                      style={
+                        tagsSelected.includes(tag.id) 
+                        ?{ backgroundColor: '#6B61ED', color: '#EFFFFA', fontWeight:'bold', textTransform:'uppercase'} 
+                        : { backgroundColor: '#d2d2d2', fontWeight:'bold', textTransform:'uppercase'}}
+                      onClick={() => handleTagClick(tag.id)}
+                      >
+                      <span>{tag.name}</span>
+                    </Tag>
+                  ))}
+                </TagContainer>
+              </FormGroup>
             
-          </FormContainer>
+              <Button type="reset" onClick={handleSubmit}>Enviar</Button>
+            </div>
 
-          <div>
-            <FormGroup>
-              <span>{'\u00a0'}</span>
-              <CheckboxGroup>
-                {checkboxs.map(checkbox => (
-                  <CheckboxItem
-                    key={checkbox.id}
-                    onClick={() => handleCheckboxClick(checkbox.id)}
-                    >
-                    <input
-                      checked={checkitemsSelected.includes(checkbox.id) ? true : false}
-                      id={`${checkbox.option}`} 
-                      type="checkbox"/>
-                    <Label htmlFor={`${checkbox.option}`}>{checkbox.option}</Label>
-                  </CheckboxItem>
-                ))}
-              </CheckboxGroup>
-            </FormGroup>
-            <FormGroup>
-            <Label>Dropdown</Label>
-            <select value={dropdown} onChange={(e) => setDropdown(e.target.value)}>
-              <option value="0">Sem experiência</option>
-              <option value="1">1-2 anos de experiência</option>
-              <option value="2">3-5 anos de experiência</option>
-              <option value="3">+ 5 anos de experiência</option>
-            </select>
-            </FormGroup>
-            <FormGroup>
-              <h2 style={{marginTop:-1}}>Tags</h2>
-              <TagContainer>
-                {tags.map(tag => (
-                  <Tag
-                    key={tag.id} 
-                    style={
-                      tagsSelected.includes(tag.id) 
-                      ?{ backgroundColor: '#6B61ED', color: '#EFFFFA', fontWeight:'bold', textTransform:'uppercase'} 
-                      : { backgroundColor: '#d2d2d2', fontWeight:'bold', textTransform:'uppercase'}}
-                    onClick={() => handleTagClick(tag.id)}
-                    >
-                    <span>{tag.name}</span>
-                  </Tag>
-                ))}
-              </TagContainer>
-            </FormGroup>
-          
-            <Button type="reset" onClick={handleSubmit}>Enviar</Button>
-          </div>
-
-        </Form>
-      </Wrapper>
+          </Form>
+        </Wrapper>
+      </>
     )
   }
 }
